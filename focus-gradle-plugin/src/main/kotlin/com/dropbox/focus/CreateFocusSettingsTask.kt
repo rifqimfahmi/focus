@@ -23,6 +23,7 @@ public abstract class CreateFocusSettingsTask : DefaultTask() {
   public fun createFocusSettings() {
     val dependencies = project.collectDependencies().sortedBy { it.path }
 
+    println("creating settings file")
     settingsFile.get().asFile.writer().use { writer ->
       writer.write("// ${project.path} specific settings\n")
       writer.appendLine("//")
@@ -46,11 +47,14 @@ public abstract class CreateFocusSettingsTask : DefaultTask() {
           }
         }
     }
+    println("done creating settings file")
   }
 
   private fun Project.collectDependencies(): Set<Project> {
+    println("collection dependencies")
     val result = mutableSetOf<Project>()
     fun addDependent(project: Project) {
+      println("Traversing: ${project.name}")
       val configuredProject = this.evaluationDependsOn(project.path)
       if (result.add(configuredProject)) {
         configuredProject.configurations.forEach { config ->
@@ -63,6 +67,7 @@ public abstract class CreateFocusSettingsTask : DefaultTask() {
     }
 
     addDependent(this)
+    println("collection dependencies done")
     return result
   }
 

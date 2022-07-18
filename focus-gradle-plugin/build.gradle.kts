@@ -2,6 +2,7 @@ import com.vanniktech.maven.publish.SonatypeHost.S01
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+  `maven-publish`
   `kotlin-dsl`
   `java-gradle-plugin`
   alias(libs.plugins.kotlin.jvm)
@@ -20,6 +21,17 @@ buildscript {
 repositories {
   mavenCentral()
   gradlePluginPortal()
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.dropbox"
+      artifactId = "focus"
+      version = "1.0.0-pax"
+      from(components["java"])
+    }
+  }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
